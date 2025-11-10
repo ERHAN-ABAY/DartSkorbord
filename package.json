@@ -1,0 +1,19 @@
+{
+  "name": "dark-skorbord",
+  "version": "1.0.0",
+  "description": "SQLite tabanlı dart skorboard uygulaması - 4 oyuncuya kadar destek",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "init-db": "node src/database/init-db.js"
+  },
+  "keywords": ["dart", "scoreboard", "sqlite", "game"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^9.2.2",
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  }
+}

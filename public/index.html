@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dark Skorbord - Dart Skorboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎯 Dark Skorbord</h1>
+      <p class="subtitle">Profesyonel Dart Skorboard Uygulaması</p>
+    </header>
+
+    <!-- Yeni Oyun Başlatma Ekranı -->
+    <div id="newGameScreen" class="screen active">
+      <div class="card">
+        <h2>Yeni Oyun Başlat</h2>
+        
+        <div class="form-group">
+          <label for="gameName">Oyun Adı (Opsiyonel)</label>
+          <input type="text" id="gameName" placeholder="Akşam Maçı">
+        </div>
+
+        <div class="form-group">
+          <label for="finishLimit">Bitiş Limiti</label>
+          <select id="finishLimit">
+            <option value="301">301</option>
+            <option value="501" selected>501</option>
+            <option value="701">701</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="playerCount">Oyuncu Sayısı</label>
+          <select id="playerCount">
+            <option value="2" selected>2 Oyuncu</option>
+            <option value="3">3 Oyuncu</option>
+            <option value="4">4 Oyuncu</option>
+            <option value="1">1 Oyuncu (Pratik)</option>
+          </select>
+        </div>
+
+        <div id="playerInputs" class="player-inputs">
+          <!-- Dinamik olarak oluşturulacak -->
+        </div>
+
+        <button class="btn btn-primary" onclick="startGame()">Oyunu Başlat</button>
+      </div>
+    </div>
+
+    <!-- Oyun Ekranı -->
+    <div id="gameScreen" class="screen">
+      <div class="game-info">
+        <h2 id="gameTitle">Oyun</h2>
+        <button class="btn btn-secondary" onclick="backToMenu()">Ana Menü</button>
+      </div>
+
+      <!-- Oyuncu Skorları -->
+      <div id="playerScores" class="player-scores">
+        <!-- Dinamik olarak oluşturulacak -->
+      </div>
+
+      <!-- Mevcut Tur -->
+      <div class="current-turn card">
+        <h3>Sıra: <span id="currentPlayerName">-</span></h3>
+        <div class="score-display">
+          <div class="remaining-score">
+            <span class="label">Kalan</span>
+            <span id="currentPlayerScore" class="score">501</span>
+          </div>
+        </div>
+
+        <!-- Atış Girişi -->
+        <div class="throw-input">
+          <h4>Atışlar</h4>
+          <div class="throws-container">
+            <div class="throw-item">
+              <label>1. Atış</label>
+              <input type="number" id="throw1" min="0" max="180" placeholder="0">
+            </div>
+            <div class="throw-item">
+              <label>2. Atış</label>
+              <input type="number" id="throw2" min="0" max="180" placeholder="0">
+            </div>
+            <div class="throw-item">
+              <label>3. Atış</label>
+              <input type="number" id="throw3" min="0" max="180" placeholder="0">
+            </div>
+          </div>
+          <div class="throw-total">
+            Toplam: <span id="throwTotal">0</span>
+          </div>
+          <button class="btn btn-primary btn-large" onclick="submitThrows()">Atışı Kaydet</button>
+        </div>
+
+        <!-- Hızlı Tuşlar -->
+        <div class="quick-buttons">
+          <h4>Hızlı Girişler</h4>
+          <div class="quick-grid">
+            <button class="btn-quick" onclick="quickScore(180)">180</button>
+            <button class="btn-quick" onclick="quickScore(140)">140</button>
+            <button class="btn-quick" onclick="quickScore(100)">100</button>
+            <button class="btn-quick" onclick="quickScore(60)">60</button>
+            <button class="btn-quick" onclick="quickScore(26)">26</button>
+            <button class="btn-quick" onclick="quickScore(0)">0</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tur Geçmişi -->
+      <div class="turn-history card">
+        <h3>Son Turlar</h3>
+        <div id="turnHistoryList">
+          <!-- Dinamik olarak oluşturulacak -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Oyun Bitişi Ekranı -->
+    <div id="gameEndScreen" class="screen">
+      <div class="card winner-card">
+        <h2>🏆 Oyun Bitti!</h2>
+        <div class="winner-info">
+          <h3>Kazanan: <span id="winnerName">-</span></h3>
+        </div>
+        <div id="finalStats"></div>
+        <button class="btn btn-primary" onclick="backToMenu()">Yeni Oyun</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
