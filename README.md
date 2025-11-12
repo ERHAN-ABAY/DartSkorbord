@@ -1,146 +1,152 @@
-# 🎯 Dark Skorbord - Profesyonel Dart Skorboard Uygulaması
+# 🎯 Dark Skorbord
 
-**4 oyuncuya kadar** destekleyen, SQLite ile yerel çalışan modern bir dart skorboard uygulaması. Node.js + Express backend ve vanilla JavaScript frontend ile geliştirilmiştir.
+Modern ve kullanıcı dostu bir dart skorboard uygulaması. 1-4 oyuncu desteği, çoklu dil seçeneği ve detaylı oyun geçmişi takibi ile dart oyununuzu bir üst seviyeye taşıyın.
 
-## 🚀 Özellikler
+## ✨ Özellikler
 
-- ✅ 1-4 oyuncu desteği
-- ✅ Esnek bitiş limiti (301, 501, 701)
-- ✅ Otomatik bust kontrolü
-- ✅ Tur geçmişi takibi
-- ✅ Gerçek zamanlı skor güncellemesi
-- ✅ Oyun istatistikleri
-- ✅ Modern ve responsive arayüz
-- ✅ SQLite ile kalıcı veri saklama
-- ✅ **YENİ:** Son 10 oyun geçmişi görüntüleme
-- ✅ **YENİ:** Hatalı atışları geri alma özelliği
+### Oyun Özellikleri
+- 🎮 **1-4 Oyuncu Desteği** - Tek başına veya arkadaşlarınızla oynayın
+- 🎯 **Esnek Bitiş Limiti** - 301/501/701 preset'leri veya özel limit (1-9999)
+- ⚡ **Otomatik Bust Kontrolü** - Negatif puan durumları otomatik yönetilir
+- 📊 **Oyun Geçmişi** - Son 10 oyununuzu kaydedin ve inceleyin
+- ↶ **Geri Alma** - Hatalı girişleri kolayca düzeltin
 
-## 📦 Kurulum
+### Arayüz Özellikleri
+- 🌍 **Çoklu Dil** - Türkçe ve İngilizce destek
+- ⌨️ **Sayısal Klavye** - Hızlı ve kolay skor girişi
+- 📱 **Responsive Tasarım** - Mobil ve masaüstü uyumlu
+- 🎨 **Modern UI** - Dark tema ile göz yormayan arayüz
+
+### Teknik Özellikler
+- 💾 **SQLite Veritabanı** - Yerel veri saklama
+- 🚀 **RESTful API** - Geliştiriciler için kolay entegrasyon
+- ⚙️ **Gerçek Zamanlı** - Anlık skor güncellemeleri
+
+## � Hızlı Başlangıç
 
 ### Gereksinimler
-- Node.js (v14 veya üzeri)
+- Node.js v14 veya üzeri
 - npm veya yarn
 
-### Adımlar
+### Kurulum
 
-1. Bağımlılıkları yükleyin:
 ```bash
+# Depoyu klonlayın
+git clone https://github.com/ERHAN-ABAY/DarkSkorbord.git
+cd DarkSkorbord
+
+# Bağımlılıkları yükleyin
 npm install
-```
 
-2. Veritabanını başlatın (opsiyonel, otomatik oluşturulacak):
-```bash
-npm run init-db
-```
-
-3. Uygulamayı başlatın:
-```bash
+# Uygulamayı başlatın
 npm start
 ```
 
-4. Tarayıcınızda açın:
-```
-http://localhost:3000
-```
+Tarayıcınızda `http://localhost:3000` adresini açın.
 
-## 💻 Geliştirme Modu
+### Geliştirme Modu
 
-Auto-reload ile geliştirme yapmak için:
 ```bash
 npm run dev
 ```
 
-## 📂 Proje Yapısı
+## 🎮 Nasıl Oynanır?
 
-```
-DarkSkorbord/
-├── src/
-│   ├── database/
-│   │   ├── schema.sql       # Veritabanı şeması
-│   │   ├── init-db.js       # DB başlatma
-│   │   └── database.js      # DB işlemleri
-│   ├── api/
-│   │   └── routes.js        # API endpoints
-│   └── game.js              # Oyun mantığı
-├── public/
-│   ├── index.html           # Ana sayfa
-│   ├── styles.css           # Stil dosyası
-│   └── app.js               # Frontend logic
-├── data/
-│   └── dartscoreboard.db    # SQLite DB (otomatik oluşur)
-├── server.js                # Express sunucu
-└── package.json
+### 1️⃣ Yeni Oyun Başlatma
+- Oyun adı girin (opsiyonel)
+- Bitiş limitini seçin (301/501/701 veya özel)
+- Oyuncu sayısını ve isimlerini belirleyin
+- "Oyunu Başlat" butonuna tıklayın
 
-```
+### 2️⃣ Atış Yapma
+- Skor giriş alanlarına atış değerlerini girin
+- Sayısal klavyeyi veya fiziksel klavyenizi kullanın
+- "Atışı Kaydet" ile onaylayın
 
-## 🎮 Kullanım
+### 3️⃣ Oyun Kuralları
+- Her oyuncu 3 dart atar
+- Kalan puan tam 0 olunca kazanırsınız
+- Negatif puan = BUST (tur iptal)
+- Son atışı geri alabilirsiniz
 
-### Yeni Oyun Başlatma
-1. Ana sayfada oyun adını girin (opsiyonel)
-2. Bitiş limitini seçin (301/501/701)
-3. Oyuncu sayısını belirleyin
-4. Oyuncu isimlerini girin
-5. "Oyunu Başlat" butonuna tıklayın
+## � Ekran Görüntüleri
 
-### Atış Yapma
-1. Sıradaki oyuncunun adı görünecektir
-2. 1-3 atış değerini girin
-3. Hızlı butonları kullanabilirsiniz
-4. "Atışı Kaydet" butonuna tıklayın
+### Ana Menü
+- Yeni oyun başlatma
+- Oyun geçmişi görüntüleme
+- Dil seçimi (TR/EN)
 
-### Kurallar
-- Her oyuncu sırayla 3 dart atma hakkına sahiptir
-- Kalan puan tam 0 olursa oyuncu kazanır
-- Negatif puan olursa BUST (o tur geri alınır)
-- Son atış "↶ Geri Al" butonu ile iptal edilebilir
+### Oyun Ekranı
+- Oyuncu skorları
+- Sıradaki oyuncu göstergesi
+- Sayısal klavye
+- Atış geri alma butonu
 
-### Yeni Özellikler
+### Oyun Geçmişi
+- Son 10 oyun
+- Kazanan vurgulaması
+- Detaylı istatistikler
 
-#### 📊 Oyun Geçmişi
-- Ana menüden "Oyun Geçmişi" butonuna tıklayın
-- Son 10 tamamlanmış oyunu görüntüleyin
-- Kazanan ve tüm oyuncuların skorlarını inceleyin
-
-#### ↶ Atış Geri Alma
-- Oyun sırasında yanlış giriş yaptıysanız
-- "Son Atışı Geri Al" butonuna tıklayın
-- Son atış iptal edilir ve sıra o oyuncuya geri verilir
-
-**Detaylı bilgi için**: [YENI_OZELLIKLER.md](YENI_OZELLIKLER.md) dosyasına bakın
-
-## 🔌 API Endpoints
+## 🔌 API Kullanımı
 
 ### Oyun İşlemleri
-- `POST /api/games` - Yeni oyun başlat
-- `GET /api/games` - Aktif oyunları listele
-- `GET /api/games/history` - Tamamlanmış oyun geçmişi (son 10)
-- `GET /api/games/:id` - Oyun durumunu getir
-- `GET /api/games/:id/stats` - Oyun istatistikleri
+
+```javascript
+// Yeni oyun başlat
+POST /api/games
+{
+  "name": "Akşam Maçı",
+  "finishLimit": 501,
+  "players": ["Ali", "Bora", "Cem"]
+}
+
+// Oyun durumunu getir
+GET /api/games/:id
+
+// Oyun geçmişi
+GET /api/games/history?limit=10
+```
 
 ### Atış İşlemleri
-- `POST /api/games/:id/throws` - Atış yap
-- `DELETE /api/games/:id/players/:playerId/last-turn` - Son atışı geri al
-- `DELETE /api/games/:id/turns/:turnId` - Belirli bir turu sil
 
-### Oyuncu İşlemleri
-- `GET /api/players` - Tüm oyuncuları listele
-- `POST /api/players` - Yeni oyuncu ekle
+```javascript
+// Atış yap
+POST /api/games/:id/throws
+{
+  "gamePlayerId": 1,
+  "throws": [60, 20, 1]
+}
+
+// Son atışı geri al
+DELETE /api/games/:id/players/:playerId/last-turn
+```
+
+Tüm API endpoint'leri için [API Dokümantasyonu](#-api-endpoints) bölümüne bakın.
 
 ## 🗄️ Veritabanı Yapısı
 
-SQLite ile 5 ana tablo kullanılır:
+Uygulama 5 ana tablo kullanır:
 
-### 1. `players` - Oyuncu Profilleri
+| Tablo | Açıklama |
+|-------|----------|
+| `players` | Oyuncu profilleri |
+| `games` | Oyun oturumları |
+| `game_players` | Oyun-oyuncu ilişkileri |
+| `turns` | Tur kayıtları |
+| `throws` | Atış detayları |
+
+<details>
+<summary>Detaylı Şema Görüntüle</summary>
+
 ```sql
+-- Oyuncu Profilleri
 CREATE TABLE players (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   created_at TEXT DEFAULT (datetime('now'))
 );
-```
 
-### 2. `games` - Oyun Oturumları
-```sql
+-- Oyun Oturumları
 CREATE TABLE games (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT,
@@ -149,112 +155,147 @@ CREATE TABLE games (
   finished_at TEXT,
   winner_player_id INTEGER
 );
-```
 
-### 3. `game_players` - Oyun-Oyuncu İlişkisi
-```sql
+-- Oyun-Oyuncu İlişkisi
 CREATE TABLE game_players (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   game_id INTEGER NOT NULL,
   player_id INTEGER NOT NULL,
-  seat INTEGER NOT NULL, -- Sıra (1-4)
+  seat INTEGER NOT NULL,
   starting_score INTEGER NOT NULL,
-  current_score INTEGER NOT NULL
+  current_score INTEGER NOT NULL,
+  FOREIGN KEY (game_id) REFERENCES games(id),
+  FOREIGN KEY (player_id) REFERENCES players(id)
 );
-```
 
-### 4. `turns` - Turlar
-```sql
+-- Turlar
 CREATE TABLE turns (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   game_id INTEGER NOT NULL,
   game_player_id INTEGER NOT NULL,
   turn_index INTEGER NOT NULL,
   total_score INTEGER DEFAULT 0,
-  is_bust INTEGER DEFAULT 0
+  is_bust INTEGER DEFAULT 0,
+  FOREIGN KEY (game_id) REFERENCES games(id),
+  FOREIGN KEY (game_player_id) REFERENCES game_players(id)
 );
-```
 
-### 5. `throws` - Atışlar
-```sql
+-- Atışlar
 CREATE TABLE throws (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   turn_id INTEGER NOT NULL,
-  throw_index INTEGER NOT NULL, -- 1-3
-  value INTEGER NOT NULL
+  throw_index INTEGER NOT NULL,
+  value INTEGER NOT NULL,
+  FOREIGN KEY (turn_id) REFERENCES turns(id)
 );
 ```
+</details>
 
-## 🎯 Oyun Mantığı
+## 📂 Proje Yapısı
 
-### Temel Akış
-- Oyun: Her oyuncu sırayla atış yapar (her tur 3 dart).
-- Oyuncu sayısı: 1-4 arası.
-- Bitiş limiti: Oyun başlangıcında belirlenir (ör. 301, 501, 701).
-- Hedef: Puan toplamı veya kalan puan (uygulamaya göre) — burada **kalan puan** modeli kullanılmıştır (başlangıç = bitiş limiti, 0 veya negatif olunca bitiş kuralları uygulanır).
-- Veri saklama: SQLite (yerel DB). Tüm oyun, oyuncu, tur ve atış bilgileri tutulur.
-
-### Kullanıcı Akışı
-1. Yeni oyun oluşturulur: oyuncu sayısı (1-4), oyuncu isimleri ve bitiş limiti girilir.
-2. Oyun başladığında her oyuncunun başlangıç puanı = bitiş limiti.
-3. Sıra gelen oyuncu 1-3 atış yapar (her atışın değeri kaydedilir).
-4. Atışlar toplandığında oyuncunun kalan puanı güncellenir.
-5. Bitiş kuralı: Kalan puan tam 0 olursa oyuncu kazanır; negatif olursa (bust) o turun puanları geri alınır.
-6. Oyun tamamlandığında maç bilgisi veritabanına kaydedilmiş olur.
-
-## 📊 Örnek Kullanım
-
-### API ile Oyun Başlatma
-```javascript
-fetch('http://localhost:3000/api/games', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    name: 'Akşam Maçı',
-    finishLimit: 501,
-    players: ['Ali', 'Bora', 'Cem']
-  })
-});
+```
+DarkSkorbord/
+├── src/
+│   ├── database/
+│   │   ├── schema.sql       # Veritabanı şeması
+│   │   ├── init-db.js       # DB başlatma scripti
+│   │   └── database.js      # DB işlemleri ve sorgular
+│   ├── api/
+│   │   └── routes.js        # REST API endpoint'leri
+│   └── game.js              # Oyun mantığı ve kuralları
+├── public/
+│   ├── index.html           # Ana HTML dosyası
+│   ├── styles.css           # Stil tanımlamaları
+│   ├── app.js               # Frontend JavaScript
+│   └── i18n.js              # Çoklu dil desteği
+├── data/
+│   └── dartscoreboard.db    # SQLite veritabanı (otomatik oluşur)
+├── server.js                # Express sunucu
+├── package.json             # Proje bağımlılıkları
+└── README.md                # Bu dosya
 ```
 
-### Atış Yapma
-```javascript
-fetch('http://localhost:3000/api/games/1/throws', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    gamePlayerId: 1,
-    throws: [60, 20, 1]
-  })
-});
-```
+## 🛠️ Teknoloji Yığını
 
-## 🛠️ Teknolojiler
+| Katman | Teknoloji |
+|--------|-----------|
+| **Backend** | Node.js, Express.js |
+| **Veritabanı** | SQLite3 (better-sqlite3) |
+| **Frontend** | Vanilla JavaScript (ES6+) |
+| **Stil** | CSS3 (Custom Properties) |
+| **API** | RESTful Architecture |
 
-- **Backend**: Node.js, Express.js
-- **Database**: SQLite3 (better-sqlite3)
-- **Frontend**: Vanilla JavaScript, HTML5, CSS3
-- **API**: RESTful
+## 🎯 API Endpoints
 
-## 📝 Notlar
+### Oyun Yönetimi
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| POST | `/api/games` | Yeni oyun başlat |
+| GET | `/api/games` | Aktif oyunları listele |
+| GET | `/api/games/history` | Tamamlanan oyunlar (son 10) |
+| GET | `/api/games/:id` | Oyun detayları |
+| GET | `/api/games/:id/stats` | Oyun istatistikleri |
 
-- Bu model esnek tutuldu — örneğin bitiş kurallarını değiştirmek (double-out vs single-out) istersen `turns` tablosuna `finish_type` veya `throws` tablosuna `is_double` gibi sütunlar ekleyebilirsin.
-- Performans: SQLite, tek kullanıcılı mobil/masaüstü uygulamalar için yeterlidir.
-- Uygulama kapatılıp açıldığında SQLite DB üzerinden oyun devam ettirilebilir.
+### Atış Yönetimi
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| POST | `/api/games/:id/throws` | Yeni atış kaydet |
+| DELETE | `/api/games/:id/players/:playerId/last-turn` | Son atışı geri al |
+| DELETE | `/api/games/:id/turns/:turnId` | Belirli turu sil |
 
-## 📄 Lisans
+### Oyuncu Yönetimi
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| GET | `/api/players` | Tüm oyuncular |
+| POST | `/api/players` | Yeni oyuncu ekle |
 
-MIT
+## 📝 Sürüm Geçmişi
 
----
+### v1.2.0 (Mevcut)
+- ✅ Çoklu dil desteği (TR/EN)
+- ✅ Sayısal klavye
+- ✅ Özel bitiş limiti girişi
+
+### v1.1.0
+- ✅ Oyun geçmişi
+- ✅ Atış geri alma
+
+### v1.0.0
+- ✅ Temel oyun özellikleri
+- ✅ SQLite entegrasyonu
+- ✅ REST API
 
 ## 🤝 Katkıda Bulunma
 
-Pull request'ler memnuniyetle karşılanır. Büyük değişiklikler için lütfen önce bir issue açarak ne değiştirmek istediğinizi tartışın.
+Katkılarınızı bekliyoruz! Lütfen şu adımları izleyin:
+
+1. Bu depoyu fork edin
+2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
+3. Değişikliklerinizi commit edin (`git commit -m 'feat: Add amazing feature'`)
+4. Branch'inizi push edin (`git push origin feature/amazing-feature`)
+5. Pull Request açın
+
+## 📄 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
+
+## 👨‍💻 Geliştirici
+
+**Erhan ABAY**
+
+## 🙏 Teşekkürler
+
+Bu projeyi kullandığınız için teşekkürler! Sorularınız veya önerileriniz için issue açmaktan çekinmeyin.
 
 ---
 
-**Geliştirici**: Erhan ABAY  
-**Versiyon**: 1.0.0  
-**Son Güncelleme**: 2025
+<div align="center">
+
+**⭐ Projeyi beğendiyseniz yıldız vermeyi unutmayın! ⭐**
+
+Made with ❤️ by Erhan ABAY
+
+Version 1.2.0 | Last Updated: 12 Kasım 2025
+
+</div>
 

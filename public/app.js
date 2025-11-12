@@ -6,11 +6,118 @@ let currentGame = null;
 let currentPlayers = [];
 let currentPlayerIndex = 0;
 let turnHistory = [];
+let activeThrowInput = null; // Aktif atış input'u (sayısal klavye için)
+
+// ============ DİL YÖNETİMİ ============
+
+// Dili değiştir
+function changeLanguage(lang) {
+  i18n.setLanguage(lang);
+}
+
+// ============ BİTİŞ LİMİTİ YÖNETİMİ ============
+
+// Bitiş limitini ayarla
+function setFinishLimit(value) {
+  document.getElementById('finishLimit').value = value;
+  document.getElementById('currentLimitDisplay').textContent = value;
+  document.getElementById('customLimit').value = '';
+  
+  // Aktif butonu güncelle
+  document.querySelectorAll('.btn-limit').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // Tıklanan butonu aktif yap
+  event.target.classList.add('active');
+}
+
+// Özel limit güncelle
+function updateCustomLimit(value) {
+  if (value && parseInt(value) > 0) {
+    document.getElementById('finishLimit').value = value;
+    document.getElementById('currentLimitDisplay').textContent = value;
+    
+    // Tüm preset butonlarını pasif yap
+    document.querySelectorAll('.btn-limit').forEach(btn => {
+      btn.classList.remove('active');
+    });
+  } else if (!value) {
+    // Boşsa varsayılan 501'e dön
+    setFinishLimit(501);
+    document.querySelectorAll('.btn-limit')[1].classList.add('active');
+  }
+}
+
+// ============ SAYISAL KLAVYE ============
+
+// Rakam ekle
+function addDigit(digit) {
+  // Eğer aktif input yoksa, ilk boş input'u bul
+  if (!activeThrowInput) {
+    const inputs = ['throw1', 'throw2', 'throw3'];
+    for (const id of inputs) {
+      const input = document.getElementById(id);
+      if (!input.value || input.value === '0') {
+        activeThrowInput = input;
+        break;
+      }
+    }
+  }
+  
+  if (activeThrowInput) {
+    const currentValue = activeThrowInput.value || '0';
+    let newValue = currentValue === '0' ? digit : currentValue + digit;
+    
+    // Maksimum 180 kontrolü
+    if (parseInt(newValue) <= 180) {
+      activeThrowInput.value = newValue;
+      calculateThrowTotal();
+    }
+  }
+}
+
+// Rakam sil (backspace)
+function deleteDigit() {
+  if (!activeThrowInput) return;
+  
+  const currentValue = activeThrowInput.value || '';
+  if (currentValue.length > 0) {
+    activeThrowInput.value = currentValue.slice(0, -1) || '0';
+    calculateThrowTotal();
+  }
+}
+
+// Mevcut input'u temizle
+function clearCurrentInput() {
+  if (activeThrowInput) {
+    activeThrowInput.value = '';
+    calculateThrowTotal();
+  } else {
+    // Hepsini temizle
+    clearThrowInputs();
+  }
+}
+
+// Input focus olayları
+function setupInputListeners() {
+  ['throw1', 'throw2', 'throw3'].forEach(id => {
+    const input = document.getElementById(id);
+    input.addEventListener('focus', () => {
+      activeThrowInput = input;
+    });
+  });
+}
 
 // ============ YENİ OYUN BAŞLATMA ============
 
 // Sayfa yüklendiğinde
 document.addEventListener('DOMContentLoaded', () => {
+  // Dil sistemini başlat
+  i18n.init();
+  i18n.updateUI();
+  
+  // Oyuncu input'larını oluştur
   generatePlayerInputs(2); // Varsayılan 2 oyuncu
   
   // Oyuncu sayısı değiştiğinde
@@ -22,6 +129,9 @@ document.addEventListener('DOMContentLoaded', () => {
   ['throw1', 'throw2', 'throw3'].forEach(id => {
     document.getElementById(id).addEventListener('input', calculateThrowTotal);
   });
+  
+  // Input listener'ları kur (sayısal klavye için)
+  setupInputListeners();
 });
 
 // Oyuncu input alanlarını oluştur
@@ -33,8 +143,8 @@ function generatePlayerInputs(count) {
     const div = document.createElement('div');
     div.className = 'player-input-group';
     div.innerHTML = `
-      <label>Oyuncu ${i}:</label>
-      <input type="text" id="player${i}" placeholder="Oyuncu ${i}" required>
+      <label>${i18n.t('players')} ${i}:</label>
+      <input type="text" id="player${i}" placeholder="${i18n.t('players')} ${i}" required>
     `;
     container.appendChild(div);
   }
@@ -42,7 +152,7 @@ function generatePlayerInputs(count) {
 
 // Oyunu başlat
 async function startGame() {
-  const gameName = document.getElementById('gameName').value || 'Yeni Oyun';
+  const gameName = document.getElementById('gameName').value || i18n.t('newGame');
   const finishLimit = parseInt(document.getElementById('finishLimit').value);
   const playerCount = parseInt(document.getElementById('playerCount').value);
   
@@ -50,7 +160,7 @@ async function startGame() {
   for (let i = 1; i <= playerCount; i++) {
     const playerName = document.getElementById(`player${i}`).value.trim();
     if (!playerName) {
-      alert(`Lütfen ${i}. oyuncunun adını girin!`);
+      alert(i18n.t('enterPlayerName').replace('oyuncunun', `${i}. ${i18n.t('players').toLowerCase()}`));
       return;
     }
     players.push(playerName);
@@ -66,7 +176,7 @@ async function startGame() {
     const data = await response.json();
     
     if (!response.ok) {
-      throw new Error(data.error || 'Oyun başlatılamadı');
+      throw new Error(data.error || i18n.t('error'));
     }
     
     currentGame = data.game;
@@ -77,7 +187,7 @@ async function startGame() {
     showScreen('gameScreen');
     updateGameUI();
   } catch (error) {
-    alert('Hata: ' + error.message);
+    alert(i18n.t('error') + ': ' + error.message);
   }
 }
 
@@ -168,7 +278,7 @@ async function submitThrows() {
   if (throw3 > 0) throws.push(throw3);
   
   if (throws.length === 0) {
-    alert('En az bir atış girmelisiniz!');
+    alert(i18n.t('enterAtLeastOneThrow'));
     return;
   }
   
@@ -187,13 +297,13 @@ async function submitThrows() {
     const data = await response.json();
     
     if (!response.ok) {
-      throw new Error(data.error || 'Atış kaydedilemedi');
+      throw new Error(data.error || i18n.t('error'));
     }
     
     // Sonucu işle
     handleThrowResult(data);
   } catch (error) {
-    alert('Hata: ' + error.message);
+    alert(i18n.t('error') + ': ' + error.message);
   }
 }
 
@@ -211,13 +321,13 @@ function handleThrowResult(data) {
   
   // Bust kontrolü
   if (data.turn.isBust) {
-    showNotification('BUST! Puan geri alındı.', 'danger');
+    showNotification(i18n.t('bust'), 'danger');
   } else if (data.game.status === 'finished') {
     // Oyun bitti
     showGameEnd(data.game.winner);
     return;
   } else {
-    showNotification(`${data.turn.totalScore} puan kaydedildi!`, 'success');
+    showNotification(`${data.turn.totalScore} ${i18n.t('pointsRecorded')}`, 'success');
   }
   
   // Sıradaki oyuncuya geç
@@ -245,7 +355,7 @@ function renderTurnHistory() {
   const container = document.getElementById('turnHistoryList');
   
   if (turnHistory.length === 0) {
-    container.innerHTML = '<p style="text-align: center; color: #a0a0a0;">Henüz atış yapılmadı</p>';
+    container.innerHTML = `<p style="text-align: center; color: #a0a0a0;">${i18n.t('noGamesYet')}</p>`;
     return;
   }
   
@@ -271,13 +381,13 @@ async function showGameEnd(winner) {
     const statsHTML = stats.map(stat => `
       <div class="stat-row">
         <strong>${stat.playerName}</strong>
-        <span>Ortalama: ${stat.averagePerTurn} | Turlar: ${stat.totalTurns} | Bust: ${stat.bustCount}</span>
+        <span>${i18n.t('averagePerTurn')}: ${stat.averagePerTurn} | ${i18n.t('totalTurns')}: ${stat.totalTurns} | ${i18n.t('bustCount')}: ${stat.bustCount}</span>
       </div>
     `).join('');
     
     document.getElementById('finalStats').innerHTML = statsHTML;
   } catch (error) {
-    console.error('İstatistikler alınamadı:', error);
+    console.error(i18n.t('loadError') + ':', error);
   }
   
   showScreen('gameEndScreen');
@@ -295,7 +405,7 @@ function showScreen(screenId) {
 
 // Ana menüye dön
 function backToMenu() {
-  if (confirm('Ana menüye dönmek istediğinize emin misiniz?')) {
+  if (confirm(i18n.t('confirmBackToMenu'))) {
     currentGame = null;
     currentPlayers = [];
     currentPlayerIndex = 0;
@@ -313,13 +423,13 @@ async function showGameHistory() {
     const games = await response.json();
     
     if (!response.ok) {
-      throw new Error('Geçmiş yüklenemedi');
+      throw new Error(i18n.t('loadError'));
     }
     
     renderGameHistory(games);
     showScreen('historyScreen');
   } catch (error) {
-    alert('Hata: ' + error.message);
+    alert(i18n.t('error') + ': ' + error.message);
   }
 }
 
@@ -328,13 +438,13 @@ function renderGameHistory(games) {
   const container = document.getElementById('historyList');
   
   if (games.length === 0) {
-    container.innerHTML = '<p style="text-align: center; color: #a0a0a0;">Henüz tamamlanmış oyun yok</p>';
+    container.innerHTML = `<p style="text-align: center; color: #a0a0a0;">${i18n.t('noGamesYet')}</p>`;
     return;
   }
   
   container.innerHTML = games.map(game => {
     const date = new Date(game.finished_at);
-    const formattedDate = date.toLocaleDateString('tr-TR', {
+    const formattedDate = date.toLocaleDateString(i18n.currentLang === 'tr' ? 'tr-TR' : 'en-US', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
@@ -345,21 +455,21 @@ function renderGameHistory(games) {
     const playersHTML = game.players.map(player => `
       <div class="history-player ${player.player_id === game.winner_player_id ? 'winner' : ''}">
         <div>${player.name}</div>
-        <div style="font-size: 0.9rem; color: #a0a0a0;">${player.current_score} kalan</div>
+        <div style="font-size: 0.9rem; color: #a0a0a0;">${player.current_score} ${i18n.t('remaining').toLowerCase()}</div>
       </div>
     `).join('');
     
     return `
       <div class="history-item">
         <div class="history-header">
-          <span class="history-title">${game.name || 'Oyun #' + game.id}</span>
+          <span class="history-title">${game.name || i18n.t('game') + ' #' + game.id}</span>
           <span class="history-date">${formattedDate}</span>
         </div>
         <div style="color: #a0a0a0; margin-bottom: 10px;">
-          Limit: ${game.finish_limit}
+          ${i18n.t('limit')}: ${game.finish_limit}
         </div>
         <div class="history-winner">
-          🏆 Kazanan: <span class="history-winner-name">${game.winner_name || 'Bilinmiyor'}</span>
+          🏆 ${i18n.t('winner')}: <span class="history-winner-name">${game.winner_name || i18n.t('noGamesYet')}</span>
         </div>
         <div class="history-players">
           ${playersHTML}
@@ -374,7 +484,7 @@ function renderGameHistory(games) {
 // Son atışı geri al
 async function undoLastThrow() {
   if (!currentGame || currentPlayers.length === 0) {
-    alert('Aktif bir oyun yok!');
+    alert(i18n.t('noActiveGame'));
     return;
   }
   
@@ -382,7 +492,7 @@ async function undoLastThrow() {
   const lastPlayerIndex = (currentPlayerIndex - 1 + currentPlayers.length) % currentPlayers.length;
   const lastPlayer = currentPlayers[lastPlayerIndex];
   
-  if (!confirm(`${lastPlayer.name} oyuncusunun son atışını geri almak istediğinize emin misiniz?`)) {
+  if (!confirm(`${lastPlayer.name} ${i18n.t('confirmUndo')}`)) {
     return;
   }
   
@@ -395,7 +505,7 @@ async function undoLastThrow() {
     const data = await response.json();
     
     if (!response.ok) {
-      throw new Error(data.error || 'Geri alma başarısız');
+      throw new Error(data.error || i18n.t('error'));
     }
     
     // Oyuncuları güncelle
@@ -412,9 +522,9 @@ async function undoLastThrow() {
     // UI'ı güncelle
     updateGameUI();
     
-    showNotification('Son atış geri alındı!', 'success');
+    showNotification(i18n.t('undoSuccess'), 'success');
   } catch (error) {
-    alert('Hata: ' + error.message);
+    alert(i18n.t('error') + ': ' + error.message);
   }
 }
 

@@ -1,7 +1,7 @@
 {
   "name": "dark-skorbord",
-  "version": "1.1.0",
-  "description": "SQLite tabanlı dart skorboard uygulaması - 4 oyuncuya kadar destek",
+  "version": "1.2.0",
+  "description": "SQLite tabanlı dart skorboard uygulaması - 4 oyuncuya kadar destek, çoklu dil desteği",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

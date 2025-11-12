@@ -9,36 +9,60 @@
 <body>
   <div class="container">
     <header>
-      <h1>🎯 Dark Skorbord</h1>
-      <p class="subtitle">Profesyonel Dart Skorboard Uygulaması</p>
+      <h1 data-i18n="appTitle">🎯 Dark Skorbord</h1>
+      <p class="subtitle" data-i18n="appSubtitle">Profesyonel Dart Skorboard Uygulaması</p>
+      
+      <!-- Dil Seçici -->
+      <div class="language-selector">
+        <label for="languageSelect">
+          <span data-i18n="language">Dil</span>:
+        </label>
+        <select id="languageSelect" onchange="changeLanguage(this.value)">
+          <option value="tr">🇹🇷 Türkçe</option>
+          <option value="en">🇬🇧 English</option>
+        </select>
+      </div>
     </header>
 
     <!-- Yeni Oyun Başlatma Ekranı -->
     <div id="newGameScreen" class="screen active">
       <div class="card">
-        <h2>Yeni Oyun Başlat</h2>
+        <h2 data-i18n="newGame">Yeni Oyun Başlat</h2>
         
         <div class="form-group">
-          <label for="gameName">Oyun Adı (Opsiyonel)</label>
-          <input type="text" id="gameName" placeholder="Akşam Maçı">
+          <label for="gameName" data-i18n="gameName">Oyun Adı (Opsiyonel)</label>
+          <input type="text" id="gameName" data-i18n-placeholder="gameName" placeholder="Akşam Maçı">
         </div>
 
         <div class="form-group">
-          <label for="finishLimit">Bitiş Limiti</label>
-          <select id="finishLimit">
-            <option value="301">301</option>
-            <option value="501" selected>501</option>
-            <option value="701">701</option>
-          </select>
+          <label for="finishLimit" data-i18n="finishLimit">Bitiş Limiti</label>
+          <div class="limit-input-group">
+            <div class="preset-buttons">
+              <button type="button" class="btn-limit" onclick="setFinishLimit(301)">301</button>
+              <button type="button" class="btn-limit active" onclick="setFinishLimit(501)">501</button>
+              <button type="button" class="btn-limit" onclick="setFinishLimit(701)">701</button>
+            </div>
+            <div class="custom-limit">
+              <label for="customLimit" style="font-size: 0.9rem; color: var(--text-muted);">
+                <span data-i18n="customLimit">Özel Limit</span>:
+              </label>
+              <input type="number" id="customLimit" min="1" max="9999" placeholder="Örn: 301" 
+                     oninput="updateCustomLimit(this.value)">
+            </div>
+          </div>
+          <input type="hidden" id="finishLimit" value="501">
+          <div class="current-limit">
+            <span data-i18n="selectedLimit">Seçili Limit</span>: <strong id="currentLimitDisplay">501</strong>
+          </div>
         </div>
 
         <div class="form-group">
-          <label for="playerCount">Oyuncu Sayısı</label>
+          <label for="playerCount" data-i18n="playerCount">Oyuncu Sayısı</label>
           <select id="playerCount">
-            <option value="2" selected>2 Oyuncu</option>
-            <option value="3">3 Oyuncu</option>
-            <option value="4">4 Oyuncu</option>
-            <option value="1">1 Oyuncu (Pratik)</option>
+            <option value="2" selected>2 <span data-i18n="players">Oyuncu</span></option>
+            <option value="3" selected>3 <span data-i18n="players">Oyuncu</span></option>
+            <option value="4" selected>4 <span data-i18n="players">Oyuncu</span></option>
+            <option value="1" selected>1 <span data-i18n="players">Oyuncu</span> (<span data-i18n="practice">Pratik</span>)</option>
           </select>
         </div>
 
@@ -46,8 +70,8 @@
           <!-- Dinamik olarak oluşturulacak -->
         </div>
 
-        <button class="btn btn-primary" onclick="startGame()">Oyunu Başlat</button>
-        <button class="btn btn-secondary" onclick="showGameHistory()" style="margin-top: 10px;">📊 Oyun Geçmişi</button>
+        <button class="btn btn-primary" onclick="startGame()" data-i18n="startGame">Oyunu Başlat</button>
+        <button class="btn btn-secondary" onclick="showGameHistory()" style="margin-top: 10px;" data-i18n="gameHistory">📊 Oyun Geçmişi</button>
       </div>
     </div>
 
@@ -55,8 +79,8 @@
     <div id="historyScreen" class="screen">
       <div class="card">
         <div class="game-info">
-          <h2>📊 Oyun Geçmişi</h2>
-          <button class="btn btn-secondary" onclick="backToMenu()">Ana Menü</button>
+          <h2 data-i18n="historyTitle">📊 Oyun Geçmişi</h2>
+          <button class="btn btn-secondary" onclick="backToMenu()" data-i18n="backToMenu">Ana Menü</button>
         </div>
         
         <div id="historyList" class="history-list">
@@ -68,8 +92,8 @@
     <!-- Oyun Ekranı -->
     <div id="gameScreen" class="screen">
       <div class="game-info">
-        <h2 id="gameTitle">Oyun</h2>
-        <button class="btn btn-secondary" onclick="backToMenu()">Ana Menü</button>
+        <h2 id="gameTitle" data-i18n="game">Oyun</h2>
+        <button class="btn btn-secondary" onclick="backToMenu()" data-i18n="backToMenu">Ana Menü</button>
       </div>
 
       <!-- Oyuncu Skorları -->
@@ -79,43 +103,43 @@
 
       <!-- Mevcut Tur -->
       <div class="current-turn card">
-        <h3>Sıra: <span id="currentPlayerName">-</span></h3>
+        <h3><span data-i18n="currentTurn">Sıra</span>: <span id="currentPlayerName">-</span></h3>
         <div class="score-display">
           <div class="remaining-score">
-            <span class="label">Kalan</span>
+            <span class="label" data-i18n="remaining">Kalan</span>
             <span id="currentPlayerScore" class="score">501</span>
           </div>
         </div>
 
         <!-- Atış Girişi -->
         <div class="throw-input">
-          <h4>Atışlar</h4>
+          <h4 data-i18n="throws">Atışlar</h4>
           <div class="throws-container">
             <div class="throw-item">
-              <label>1. Atış</label>
+              <label>1. <span data-i18n="throw">Atış</span></label>
               <input type="number" id="throw1" min="0" max="180" placeholder="0">
             </div>
             <div class="throw-item">
-              <label>2. Atış</label>
+              <label>2. <span data-i18n="throw">Atış</span></label>
               <input type="number" id="throw2" min="0" max="180" placeholder="0">
             </div>
             <div class="throw-item">
-              <label>3. Atış</label>
+              <label>3. <span data-i18n="throw">Atış</span></label>
               <input type="number" id="throw3" min="0" max="180" placeholder="0">
             </div>
           </div>
           <div class="throw-total">
-            Toplam: <span id="throwTotal">0</span>
+            <span data-i18n="total">Toplam</span>: <span id="throwTotal">0</span>
           </div>
           <div class="button-group">
-            <button class="btn btn-primary btn-large" onclick="submitThrows()">Atışı Kaydet</button>
-            <button class="btn btn-danger" onclick="undoLastThrow()" style="margin-top: 10px;">↶ Son Atışı Geri Al</button>
+            <button class="btn btn-primary btn-large" onclick="submitThrows()" data-i18n="saveThrow">Atışı Kaydet</button>
+            <button class="btn btn-danger" onclick="undoLastThrow()" style="margin-top: 10px;" data-i18n="undoLastThrow">↶ Son Atışı Geri Al</button>
           </div>
         </div>
 
         <!-- Hızlı Tuşlar -->
         <div class="quick-buttons">
-          <h4>Hızlı Girişler</h4>
+          <h4 data-i18n="quickInputs">Hızlı Girişler</h4>
           <div class="quick-grid">
             <button class="btn-quick" onclick="quickScore(180)">180</button>
             <button class="btn-quick" onclick="quickScore(140)">140</button>
@@ -125,11 +149,30 @@
             <button class="btn-quick" onclick="quickScore(0)">0</button>
           </div>
         </div>
+
+        <!-- Sayısal Klavye -->
+        <div class="numeric-keypad">
+          <h4 data-i18n="numericKeypad">Sayısal Klavye</h4>
+          <div class="keypad-grid">
+            <button class="btn-key" onclick="addDigit('7')">7</button>
+            <button class="btn-key" onclick="addDigit('8')">8</button>
+            <button class="btn-key" onclick="addDigit('9')">9</button>
+            <button class="btn-key" onclick="addDigit('4')">4</button>
+            <button class="btn-key" onclick="addDigit('5')">5</button>
+            <button class="btn-key" onclick="addDigit('6')">6</button>
+            <button class="btn-key" onclick="addDigit('1')">1</button>
+            <button class="btn-key" onclick="addDigit('2')">2</button>
+            <button class="btn-key" onclick="addDigit('3')">3</button>
+            <button class="btn-key btn-key-wide" onclick="clearCurrentInput()" data-i18n="clear">Temizle</button>
+            <button class="btn-key" onclick="addDigit('0')">0</button>
+            <button class="btn-key" onclick="deleteDigit()">⌫</button>
+          </div>
+        </div>
       </div>
 
       <!-- Tur Geçmişi -->
       <div class="turn-history card">
-        <h3>Son Turlar</h3>
+        <h3 data-i18n="recentTurns">Son Turlar</h3>
         <div id="turnHistoryList">
           <!-- Dinamik olarak oluşturulacak -->
         </div>
@@ -139,16 +182,17 @@
     <!-- Oyun Bitişi Ekranı -->
     <div id="gameEndScreen" class="screen">
       <div class="card winner-card">
-        <h2>🏆 Oyun Bitti!</h2>
+        <h2 data-i18n="gameOver">🏆 Oyun Bitti!</h2>
         <div class="winner-info">
-          <h3>Kazanan: <span id="winnerName">-</span></h3>
+          <h3><span data-i18n="winnerIs">Kazanan</span>: <span id="winnerName">-</span></h3>
         </div>
         <div id="finalStats"></div>
-        <button class="btn btn-primary" onclick="backToMenu()">Yeni Oyun</button>
+        <button class="btn btn-primary" onclick="backToMenu()" data-i18n="newGameButton">Yeni Oyun</button>
       </div>
     </div>
   </div>
 
+  <script src="i18n.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

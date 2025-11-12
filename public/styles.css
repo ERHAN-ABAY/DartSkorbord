@@ -48,6 +48,40 @@ header h1 {
   font-size: 1.1rem;
 }
 
+/* Dil Seçici */
+.language-selector {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.language-selector label {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.language-selector select {
+  padding: 8px 15px;
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-light);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.language-selector select:hover {
+  border-color: var(--primary-color);
+}
+
+.language-selector select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
 /* Ekran Geçişleri */
 .screen {
   display: none;
@@ -112,6 +146,81 @@ header h1 {
 .form-group select:focus {
   outline: none;
   border-color: var(--primary-color);
+}
+
+/* Limit Giriş Grubu */
+.limit-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.preset-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.btn-limit {
+  padding: 15px;
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-light);
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-limit:hover {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.btn-limit.active {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(30, 136, 229, 0.4);
+}
+
+.custom-limit {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.custom-limit input {
+  width: 100%;
+  padding: 12px;
+  background: var(--dark-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-light);
+  font-size: 1.1rem;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+
+.custom-limit input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.current-limit {
+  margin-top: 10px;
+  padding: 10px;
+  background: var(--dark-bg);
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.current-limit strong {
+  color: var(--primary-color);
+  font-size: 1.3rem;
 }
 
 /* Butonlar */
@@ -348,6 +457,53 @@ header h1 {
   transform: scale(1.05);
 }
 
+/* Sayısal Klavye */
+.numeric-keypad {
+  margin-top: 30px;
+  padding: 20px;
+  background: var(--dark-bg);
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
+}
+
+.keypad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-key {
+  padding: 20px;
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-light);
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-key:hover {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  transform: scale(1.05);
+}
+
+.btn-key:active {
+  transform: scale(0.95);
+}
+
+.btn-key-wide {
+  grid-column: span 1;
+  background: var(--danger-color);
+}
+
+.btn-key-wide:hover {
+  background: #c62828;
+}
+
 /* Tur Geçmişi */
 .turn-history {
   max-height: 300px;
@@ -501,6 +657,10 @@ header h1 {
   .quick-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+  
+  .keypad-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 
   .player-scores {
     grid-template-columns: 1fr;
@@ -508,6 +668,11 @@ header h1 {
 
   .remaining-score .score {
     font-size: 3rem;
+  }
+  
+  .language-selector {
+    flex-direction: column;
+    gap: 5px;
   }
 }
 
