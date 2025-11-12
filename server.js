@@ -39,10 +39,10 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════╗
-║     🎯 DARK SKORBORD BAŞLATILDI 🎯    ║
+║     🎯 DARK SKORBORD BAŞLATILDI 🎯     ║
 ╠════════════════════════════════════════╣
-║  Sunucu: http://localhost:${PORT}       ║
-║  API:    http://localhost:${PORT}/api  ║
+║  Sunucu: http://localhost:${PORT}         ║
+║  API:    http://localhost:${PORT}/api     ║
 ╚════════════════════════════════════════╝
   `);
 });
