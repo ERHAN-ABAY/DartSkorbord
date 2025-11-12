@@ -47,6 +47,21 @@
         </div>
 
         <button class="btn btn-primary" onclick="startGame()">Oyunu Başlat</button>
+        <button class="btn btn-secondary" onclick="showGameHistory()" style="margin-top: 10px;">📊 Oyun Geçmişi</button>
+      </div>
+    </div>
+
+    <!-- Oyun Geçmişi Ekranı -->
+    <div id="historyScreen" class="screen">
+      <div class="card">
+        <div class="game-info">
+          <h2>📊 Oyun Geçmişi</h2>
+          <button class="btn btn-secondary" onclick="backToMenu()">Ana Menü</button>
+        </div>
+        
+        <div id="historyList" class="history-list">
+          <!-- Dinamik olarak oluşturulacak -->
+        </div>
       </div>
     </div>
 
@@ -92,7 +107,10 @@
           <div class="throw-total">
             Toplam: <span id="throwTotal">0</span>
           </div>
-          <button class="btn btn-primary btn-large" onclick="submitThrows()">Atışı Kaydet</button>
+          <div class="button-group">
+            <button class="btn btn-primary btn-large" onclick="submitThrows()">Atışı Kaydet</button>
+            <button class="btn btn-danger" onclick="undoLastThrow()" style="margin-top: 10px;">↶ Son Atışı Geri Al</button>
+          </div>
         </div>
 
         <!-- Hızlı Tuşlar -->

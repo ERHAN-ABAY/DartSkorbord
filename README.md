@@ -12,6 +12,8 @@
 - ✅ Oyun istatistikleri
 - ✅ Modern ve responsive arayüz
 - ✅ SQLite ile kalıcı veri saklama
+- ✅ **YENİ:** Son 10 oyun geçmişi görüntüleme
+- ✅ **YENİ:** Hatalı atışları geri alma özelliği
 
 ## 📦 Kurulum
 
@@ -90,17 +92,35 @@ DarkSkorbord/
 - Her oyuncu sırayla 3 dart atma hakkına sahiptir
 - Kalan puan tam 0 olursa oyuncu kazanır
 - Negatif puan olursa BUST (o tur geri alınır)
+- Son atış "↶ Geri Al" butonu ile iptal edilebilir
+
+### Yeni Özellikler
+
+#### 📊 Oyun Geçmişi
+- Ana menüden "Oyun Geçmişi" butonuna tıklayın
+- Son 10 tamamlanmış oyunu görüntüleyin
+- Kazanan ve tüm oyuncuların skorlarını inceleyin
+
+#### ↶ Atış Geri Alma
+- Oyun sırasında yanlış giriş yaptıysanız
+- "Son Atışı Geri Al" butonuna tıklayın
+- Son atış iptal edilir ve sıra o oyuncuya geri verilir
+
+**Detaylı bilgi için**: [YENI_OZELLIKLER.md](YENI_OZELLIKLER.md) dosyasına bakın
 
 ## 🔌 API Endpoints
 
 ### Oyun İşlemleri
 - `POST /api/games` - Yeni oyun başlat
 - `GET /api/games` - Aktif oyunları listele
+- `GET /api/games/history` - Tamamlanmış oyun geçmişi (son 10)
 - `GET /api/games/:id` - Oyun durumunu getir
 - `GET /api/games/:id/stats` - Oyun istatistikleri
 
 ### Atış İşlemleri
 - `POST /api/games/:id/throws` - Atış yap
+- `DELETE /api/games/:id/players/:playerId/last-turn` - Son atışı geri al
+- `DELETE /api/games/:id/turns/:turnId` - Belirli bir turu sil
 
 ### Oyuncu İşlemleri
 - `GET /api/players` - Tüm oyuncuları listele

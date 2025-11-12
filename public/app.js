@@ -304,6 +304,120 @@ function backToMenu() {
   }
 }
 
+// ============ OYUN GEÇMİŞİ ============
+
+// Oyun geçmişini göster
+async function showGameHistory() {
+  try {
+    const response = await fetch(`${API_BASE}/games/history`);
+    const games = await response.json();
+    
+    if (!response.ok) {
+      throw new Error('Geçmiş yüklenemedi');
+    }
+    
+    renderGameHistory(games);
+    showScreen('historyScreen');
+  } catch (error) {
+    alert('Hata: ' + error.message);
+  }
+}
+
+// Geçmişi render et
+function renderGameHistory(games) {
+  const container = document.getElementById('historyList');
+  
+  if (games.length === 0) {
+    container.innerHTML = '<p style="text-align: center; color: #a0a0a0;">Henüz tamamlanmış oyun yok</p>';
+    return;
+  }
+  
+  container.innerHTML = games.map(game => {
+    const date = new Date(game.finished_at);
+    const formattedDate = date.toLocaleDateString('tr-TR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    
+    const playersHTML = game.players.map(player => `
+      <div class="history-player ${player.player_id === game.winner_player_id ? 'winner' : ''}">
+        <div>${player.name}</div>
+        <div style="font-size: 0.9rem; color: #a0a0a0;">${player.current_score} kalan</div>
+      </div>
+    `).join('');
+    
+    return `
+      <div class="history-item">
+        <div class="history-header">
+          <span class="history-title">${game.name || 'Oyun #' + game.id}</span>
+          <span class="history-date">${formattedDate}</span>
+        </div>
+        <div style="color: #a0a0a0; margin-bottom: 10px;">
+          Limit: ${game.finish_limit}
+        </div>
+        <div class="history-winner">
+          🏆 Kazanan: <span class="history-winner-name">${game.winner_name || 'Bilinmiyor'}</span>
+        </div>
+        <div class="history-players">
+          ${playersHTML}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ============ GERİ ALMA İŞLEMLERİ ============
+
+// Son atışı geri al
+async function undoLastThrow() {
+  if (!currentGame || currentPlayers.length === 0) {
+    alert('Aktif bir oyun yok!');
+    return;
+  }
+  
+  // Son atış yapan oyuncuyu bul (bir önceki oyuncu)
+  const lastPlayerIndex = (currentPlayerIndex - 1 + currentPlayers.length) % currentPlayers.length;
+  const lastPlayer = currentPlayers[lastPlayerIndex];
+  
+  if (!confirm(`${lastPlayer.name} oyuncusunun son atışını geri almak istediğinize emin misiniz?`)) {
+    return;
+  }
+  
+  try {
+    const response = await fetch(
+      `${API_BASE}/games/${currentGame.id}/players/${lastPlayer.id}/last-turn`,
+      { method: 'DELETE' }
+    );
+    
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Geri alma başarısız');
+    }
+    
+    // Oyuncuları güncelle
+    currentPlayers = data.players;
+    
+    // Geçmişten sil
+    if (turnHistory.length > 0) {
+      turnHistory.shift();
+    }
+    
+    // Sırayı geri al
+    currentPlayerIndex = lastPlayerIndex;
+    
+    // UI'ı güncelle
+    updateGameUI();
+    
+    showNotification('Son atış geri alındı!', 'success');
+  } catch (error) {
+    alert('Hata: ' + error.message);
+  }
+}
+
 // Animasyon
 const style = document.createElement('style');
 style.textContent = `

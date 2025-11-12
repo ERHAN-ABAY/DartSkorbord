@@ -56,6 +56,29 @@ function getActiveGames() {
   return db.prepare('SELECT * FROM games WHERE finished_at IS NULL ORDER BY started_at DESC').all();
 }
 
+// Tamamlanmış oyunları getir (son 10)
+function getFinishedGames(limit = 10) {
+  return db.prepare(`
+    SELECT g.*, p.name as winner_name
+    FROM games g
+    LEFT JOIN players p ON p.id = g.winner_player_id
+    WHERE g.finished_at IS NOT NULL
+    ORDER BY g.finished_at DESC
+    LIMIT ?
+  `).all(limit);
+}
+
+// Tüm oyunları getir (aktif + tamamlanmış)
+function getAllGames(limit = 20) {
+  return db.prepare(`
+    SELECT g.*, p.name as winner_name
+    FROM games g
+    LEFT JOIN players p ON p.id = g.winner_player_id
+    ORDER BY g.started_at DESC
+    LIMIT ?
+  `).all(limit);
+}
+
 // Oyun oyuncularını getir
 function getGamePlayers(gameId) {
   return db.prepare(`
@@ -171,6 +194,75 @@ function getPlayerTurns(gamePlayerId) {
   `).all(gamePlayerId);
 }
 
+// ============ GERİ ALMA İŞLEMLERİ ============
+
+// Son turu sil (undo için)
+function deleteLastTurn(gamePlayerId) {
+  const transaction = db.transaction((gpId) => {
+    // Son turu bul
+    const lastTurn = db.prepare(`
+      SELECT * FROM turns 
+      WHERE game_player_id = ?
+      ORDER BY turn_index DESC 
+      LIMIT 1
+    `).get(gpId);
+    
+    if (!lastTurn) {
+      return { success: false, message: 'Silinecek tur bulunamadı' };
+    }
+    
+    // Tur bust değilse, skorları geri al
+    if (!lastTurn.is_bust) {
+      db.prepare(`
+        UPDATE game_players 
+        SET current_score = current_score + ?
+        WHERE id = ?
+      `).run(lastTurn.total_score, gpId);
+    }
+    
+    // Atışları sil
+    db.prepare('DELETE FROM throws WHERE turn_id = ?').run(lastTurn.id);
+    
+    // Turu sil
+    db.prepare('DELETE FROM turns WHERE id = ?').run(lastTurn.id);
+    
+    return { success: true, turn: lastTurn };
+  });
+  
+  return transaction(gamePlayerId);
+}
+
+// Belirli bir turu sil
+function deleteTurn(turnId) {
+  const transaction = db.transaction((tId) => {
+    // Turu bul
+    const turn = db.prepare('SELECT * FROM turns WHERE id = ?').get(tId);
+    
+    if (!turn) {
+      return { success: false, message: 'Tur bulunamadı' };
+    }
+    
+    // Tur bust değilse, skorları geri al
+    if (!turn.is_bust) {
+      db.prepare(`
+        UPDATE game_players 
+        SET current_score = current_score + ?
+        WHERE id = ?
+      `).run(turn.total_score, turn.game_player_id);
+    }
+    
+    // Atışları sil
+    db.prepare('DELETE FROM throws WHERE turn_id = ?').run(tId);
+    
+    // Turu sil
+    db.prepare('DELETE FROM turns WHERE id = ?').run(tId);
+    
+    return { success: true, turn };
+  });
+  
+  return transaction(turnId);
+}
+
 module.exports = {
   // Oyuncu
   createOrGetPlayer,
@@ -180,6 +272,8 @@ module.exports = {
   createGame,
   getGame,
   getActiveGames,
+  getFinishedGames,
+  getAllGames,
   getGamePlayers,
   finishGame,
   
@@ -199,5 +293,9 @@ module.exports = {
   
   // İstatistik
   getGameTurns,
-  getPlayerTurns
+  getPlayerTurns,
+  
+  // Geri Alma
+  deleteLastTurn,
+  deleteTurn
 };
